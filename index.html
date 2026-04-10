@@ -860,11 +860,33 @@
       line-height: 1.6;
       font-weight: 600;
     }
+    .capture-desc {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.65);
+      border-radius: 20px;
+      padding: 20px 22px;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(8px);
+    }
+    .capture-desc-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--color-primary-dark);
+      margin-bottom: 10px;
+    }
+    .capture-desc p {
+      font-size: 13px;
+      line-height: 1.85;
+      color: var(--color-text);
+      white-space: pre-wrap;
+      word-break: keep-all;
+    }
     .capture-models {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      margin-top: 22px;
+      margin-top: 18px;
       position: relative;
       z-index: 1;
     }
@@ -2059,6 +2081,10 @@
               <div class="capture-code">${t.code}</div>
               <div class="capture-nick">${t.cn}</div>
               <div class="capture-intro">${escapeHtml(t.intro)}</div>
+            </div>
+            <div class="capture-desc">
+              <div class="capture-desc-title">💌 이 인격에 대하여</div>
+              <p>${escapeHtml(t.desc)}</p>
             </div>
             <div class="capture-models">
               ${r.modelScores.map(m => `
