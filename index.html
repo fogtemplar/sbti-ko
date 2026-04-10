@@ -11,14 +11,12 @@
       --color-primary-light: #F5A3C4;
       --color-secondary: #C084FC;
       --color-secondary-dark: #A78BFA;
-      --color-accent: #FFB7D5;
       --color-bg: #FFF5F9;
       --color-card: #FFFFFF;
       --color-text: #3D2C3E;
       --color-text-light: #8B7A8E;
       --color-text-dim: #B8A0BC;
-      --color-line: #F5E1EC;
-      --shadow-soft: 0 4px 20px rgba(232, 121, 164, 0.12);
+      --color-line: #FCE7F0;
       --shadow-card: 0 8px 30px rgba(232, 121, 164, 0.10);
       --shadow-btn: 0 4px 20px rgba(232, 121, 164, 0.30);
       --radius: 24px;
@@ -36,14 +34,24 @@
       color: var(--color-text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
     }
 
     .shell {
-      max-width: 720px;
+      max-width: 480px;
       margin: 0 auto;
-      padding: 24px 18px 56px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 18px 20px 32px;
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
+
+    h1, h2, h3, p { margin: 0; }
+    button { border: 0; cursor: pointer; font: inherit; transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+    button:active { transform: scale(0.98); }
+    button:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
 
     /* 떠다니는 배경 이모지 */
     .deco {
@@ -51,14 +59,14 @@
       pointer-events: none;
       user-select: none;
       opacity: 0.18;
-      font-size: 28px;
+      font-size: 26px;
     }
-    .deco.d1 { top: 40px;  left: 16px;  animation: float 3s ease-in-out infinite; }
-    .deco.d2 { top: 90px;  right: 24px; animation: float 3.4s ease-in-out infinite .5s; opacity:.14; font-size:24px; }
-    .deco.d3 { top: 220px; left: 30px;  animation: sparkle 2.2s ease-in-out infinite 1s; opacity:.2; font-size:22px; }
-    .deco.d4 { bottom: 140px; right: 20px; animation: float 3s ease-in-out infinite 1.5s; opacity:.15; font-size:30px; }
-    .deco.d5 { bottom: 220px; left: 28px; animation: sparkle 2.6s ease-in-out infinite .8s; opacity:.18; }
-    .deco.d6 { bottom: 80px; right: 40px; animation: float 3.2s ease-in-out infinite 2s; opacity:.15; font-size:22px; }
+    .deco.d1 { top: 60px;  left: 18px;  animation: float 3s ease-in-out infinite; }
+    .deco.d2 { top: 110px; right: 24px; animation: float 3.4s ease-in-out infinite .5s; opacity:.14; font-size:22px; }
+    .deco.d3 { top: 240px; left: 26px;  animation: sparkle 2.2s ease-in-out infinite 1s; opacity:.2; font-size:20px; }
+    .deco.d4 { bottom: 160px; right: 22px; animation: float 3s ease-in-out infinite 1.5s; opacity:.15; font-size:28px; }
+    .deco.d5 { bottom: 240px; left: 26px; animation: sparkle 2.6s ease-in-out infinite .8s; opacity:.18; }
+    .deco.d6 { bottom: 90px; right: 36px; animation: float 3.2s ease-in-out infinite 2s; opacity:.15; font-size:22px; }
 
     @keyframes float {
       0%,100% { transform: translateY(0) rotate(0deg); }
@@ -73,289 +81,481 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scale-in {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
     @keyframes bounce-slow {
       0%,100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
-    @keyframes pop-in {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
+    @keyframes bounce-dot {
+      0%,80%,100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes wiggle {
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(8deg); }
+      75% { transform: rotate(-8deg); }
+    }
+    @keyframes paw-pulse {
+      0%,100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
     }
 
-    .card {
-      background: var(--color-card);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      border: 1px solid rgba(232,121,164,0.08);
-    }
+    .animate-fade-in { animation: fade-in .4s ease-out; }
+    .animate-slide-up { animation: slide-up .5s ease-out both; }
+    .animate-scale-in { animation: scale-in .45s ease-out both; }
 
-    .hero {
-      padding: 36px 28px 32px;
-      margin-top: 12px;
-      text-align: center;
-      position: relative;
-      animation: fade-in .5s ease-out;
-    }
+    /* ─── 화면 ─── */
+    .screen { display: none; flex: 1; flex-direction: column; }
+    .screen.active { display: flex; animation: fade-in .35s ease-out; }
 
-    h1, h2, h3, p { margin: 0; }
-
+    /* ─── INTRO ─── */
+    #intro { justify-content: center; align-items: center; text-align: center; padding: 40px 0; }
     .brand-logo {
-      width: 88px;
-      height: 88px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       background: linear-gradient(135deg, #FFB7D5 0%, #E879A4 50%, #C084FC 100%);
-      margin: 0 auto 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 38px;
+      font-size: 36px;
       font-weight: 900;
       color: #fff;
       letter-spacing: -0.04em;
-      box-shadow: 0 8px 28px rgba(232,121,164,0.35);
+      box-shadow: 0 12px 32px rgba(232,121,164,0.35);
       animation: bounce-slow 2.4s ease-in-out infinite;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 22px;
     }
-
-    .hero h1 {
-      font-size: clamp(24px, 6vw, 32px);
-      line-height: 1.35;
+    .intro-title {
+      font-size: 28px;
+      font-weight: 900;
       letter-spacing: -0.025em;
-      font-weight: 800;
-      color: var(--color-text);
+      line-height: 1.3;
+      margin-bottom: 10px;
     }
-    .hero .sub {
-      margin-top: 14px;
+    .intro-sub {
       font-size: 14px;
       color: var(--color-text-light);
       line-height: 1.75;
+      margin-bottom: 36px;
     }
-
-    .hero-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
-      font: inherit;
-    }
-    button:active { transform: scale(0.98); }
-    button:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
-
-    .btn-primary {
+    .start-btn {
+      width: 100%;
+      max-width: 320px;
+      padding: 18px;
       background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
       color: #fff;
-      padding: 16px 22px;
       border-radius: 999px;
-      font-weight: 800;
       font-size: 16px;
+      font-weight: 800;
       box-shadow: var(--shadow-btn);
-      letter-spacing: -0.01em;
     }
-    .btn-primary:hover:not(:disabled) {
-      box-shadow: 0 6px 26px rgba(232,121,164,0.40);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: #fff;
-      color: var(--color-primary);
-      padding: 16px 22px;
-      border-radius: 999px;
+    .start-btn:hover { box-shadow: 0 6px 26px rgba(232,121,164,0.40); transform: translateY(-1px); }
+    .intro-meta { margin-top: 22px; font-size: 12px; color: var(--color-text-dim); line-height: 1.8; }
+    .intro-meta a { color: var(--color-secondary); text-decoration: none; }
+    .intro-meta a:hover { text-decoration: underline; }
+    .history-link {
+      margin-top: 18px;
+      display: inline-block;
+      color: var(--color-secondary);
+      font-size: 13px;
       font-weight: 700;
-      font-size: 15px;
-      border: 2px solid #FFE4EE;
+      text-decoration: none;
+      opacity: 0.7;
+      cursor: pointer;
+      background: none;
+      border: 0;
     }
-    .btn-secondary:hover {
-      border-color: var(--color-primary);
-      background: #FFF9FC;
+    .history-link:hover { opacity: 1; }
+
+    /* ─── QUIZ ─── */
+    #quiz { padding-top: 8px; }
+    .quiz-progress {
+      margin-bottom: 12px;
     }
-
-    .credits {
-      margin-top: 22px;
-      font-size: 12px;
-      color: var(--color-text-dim);
-      line-height: 1.7;
-    }
-    .credits a { color: var(--color-secondary); text-decoration: none; }
-    .credits a:hover { text-decoration: underline; }
-
-    .screen { display: none; }
-    .screen.active { display: block; animation: fade-in .4s ease-out; }
-
-    .test-wrap, .result-wrap {
-      margin-top: 16px;
-      padding: 24px 22px;
-    }
-
-    .topbar {
+    .quiz-progress-text {
       display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 22px;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--color-text-light);
+      font-weight: 700;
+      margin-bottom: 8px;
     }
-
-    .progress {
-      flex: 1;
-      height: 12px;
+    .quiz-progress-text .pct { color: var(--color-primary); }
+    .quiz-progress-bar {
+      width: 100%;
+      height: 8px;
       background: #FCE7F0;
       border-radius: 999px;
       overflow: hidden;
     }
-    .progress > span {
+    .quiz-progress-bar > span {
       display: block;
-      width: 0;
       height: 100%;
       background: linear-gradient(90deg, #E879A4, #C084FC);
       border-radius: inherit;
       transition: width .35s ease;
     }
-    .progress-text {
-      color: var(--color-primary);
-      font-size: 13px;
-      font-weight: 800;
-      white-space: nowrap;
-      min-width: 56px;
-      text-align: right;
-    }
-
-    .question-list {
-      display: grid;
-      gap: 18px;
-    }
-
-    .question {
-      border-radius: var(--radius);
-      padding: 20px 18px;
-      background: linear-gradient(180deg, #FFFAFC, #FFF5F9);
-      border: 1px solid #FCE7F0;
-      animation: pop-in .4s ease-out;
-    }
-
-    .question-meta {
+    .quiz-stage-msg {
+      height: 36px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
+      justify-content: center;
+      margin: 4px 0 6px;
     }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 11px;
+    .stage-pill {
+      background: rgba(232, 121, 164, 0.10);
+      color: var(--color-primary);
+      padding: 8px 16px;
       border-radius: 999px;
-      background: linear-gradient(135deg, #FFE4EE, #F3E0FF);
-      color: var(--color-primary-dark);
-      font-size: 11px;
-      font-weight: 800;
-    }
-    .question-meta > div:last-child {
-      font-size: 11px;
-      color: var(--color-text-dim);
-    }
-
-    .question-title {
-      font-size: 16px;
-      line-height: 1.7;
+      font-size: 13px;
       font-weight: 700;
+      animation: fade-in .4s ease-out;
+    }
+
+    .quiz-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8px 0;
+    }
+    .quiz-emoji {
+      text-align: center;
+      font-size: 64px;
+      margin-bottom: 18px;
+      animation: scale-in .4s ease-out;
+    }
+    .quiz-question {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 24px;
+      animation: fade-in .4s ease-out;
       color: var(--color-text);
-      white-space: pre-wrap;
-      word-break: keep-all;
+    }
+    .quiz-question.long {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.7;
+      text-align: left;
+      background: #fff;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--color-line);
     }
 
-    .options {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .option {
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option-btn {
+      width: 100%;
+      padding: 18px 20px;
+      border-radius: 20px;
+      border: 2px solid #F0E0EA;
+      background: #fff;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--color-text);
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 2px solid #F0E0EA;
-      background: #fff;
-      cursor: pointer;
-      transition: all .18s ease;
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--color-text);
+      animation: slide-up .4s ease-out both;
     }
-    .option:hover {
-      border-color: var(--color-primary-light);
-      background: #FFF9FC;
-      transform: translateY(-1px);
-    }
-    .option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .option:has(input:checked) {
+    .option-btn:hover { border-color: var(--color-primary-light); background: #FFF9FC; }
+    .option-btn.selected {
       border-color: var(--color-primary);
       background: linear-gradient(135deg, #FFF0F7, #F8EBFF);
-      box-shadow: 0 4px 14px rgba(232,121,164,0.18);
+      transform: scale(0.98);
+      box-shadow: 0 4px 14px rgba(232,121,164,0.20);
     }
-
     .option-code {
       flex-shrink: 0;
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: #FFE4EE;
       color: var(--color-primary);
       font-weight: 800;
-      font-size: 12px;
+      font-size: 13px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .option:has(input:checked) .option-code {
+    .option-btn.selected .option-code {
       background: linear-gradient(135deg, #E879A4, #C084FC);
       color: #fff;
     }
 
-    .actions-bottom {
+    .quiz-back {
+      margin-top: 20px;
+      text-align: center;
+      background: none;
+      border: 0;
+      color: var(--color-text-dim);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px;
+    }
+    .quiz-back:hover { color: var(--color-text-light); }
+
+    /* ─── ANALYZING ─── */
+    #analyzing { justify-content: center; align-items: center; text-align: center; padding: 40px 0; }
+    .analyzing-icon {
+      position: relative;
+      margin-bottom: 32px;
+    }
+    .analyzing-icon .main { font-size: 72px; animation: bounce-slow 2s ease-in-out infinite; }
+    .analyzing-icon .sub1 {
+      position: absolute;
+      top: -8px;
+      right: -20px;
+      font-size: 32px;
+      animation: paw-pulse 1.5s ease-in-out infinite;
+    }
+    .analyzing-icon .sub2 {
+      position: absolute;
+      bottom: -8px;
+      left: -20px;
+      font-size: 26px;
+      animation: paw-pulse 1.5s ease-in-out infinite 0.7s;
+    }
+    .analyzing-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .analyzing-title .accent {
+      background: linear-gradient(135deg, #E879A4, #C084FC);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .analyzing-sub { font-size: 14px; color: var(--color-text-light); margin-bottom: 32px; }
+    .dots { display: flex; gap: 8px; }
+    .dots > div {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      animation: bounce-dot 1.4s ease-in-out infinite both;
+    }
+    .dots > div:nth-child(1) { animation-delay: -0.3s; }
+    .dots > div:nth-child(2) { animation-delay: -0.15s; }
+
+    /* ─── RESULT ─── */
+    #result { padding-top: 24px; }
+    .step-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 16px;
+    }
+    .step-icon {
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scale-in .5s ease-out;
+      margin-bottom: 6px;
+    }
+    .step-icon .emoji-lg { font-size: 64px; }
+    .step-kicker {
+      font-size: 13px;
+      color: var(--color-text-light);
+      font-weight: 700;
+      margin-bottom: 6px;
+      animation: slide-up .5s ease-out both;
+      animation-delay: .15s;
+    }
+    .step-heading {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.4;
+      margin-bottom: 24px;
+      animation: slide-up .5s ease-out both;
+      animation-delay: .3s;
+    }
+    .step-heading .grad {
+      background: linear-gradient(135deg, #E879A4, #C084FC);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hint-cards {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    .hint-card {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--color-text);
+      border: 1px solid var(--color-line);
+      animation: slide-up .5s ease-out both;
+      text-align: left;
+    }
+    .hint-card .label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .axis-list {
+      width: 100%;
+      max-width: 360px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px dashed #F5D9E6;
+      flex: 1;
     }
-    .hint {
+    .axis-item {
+      background: #fff;
+      border-radius: 20px;
+      padding: 16px 18px;
+      border: 1px solid var(--color-line);
+      animation: slide-up .5s ease-out both;
+    }
+    .axis-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .axis-name { font-size: 13px; font-weight: 800; color: var(--color-text-light); }
+    .axis-pct { font-size: 16px; font-weight: 900; color: var(--color-primary); }
+    .axis-bar {
+      width: 100%;
+      height: 10px;
+      background: #FCE7F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .axis-bar > span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #E879A4, #C084FC);
+      border-radius: inherit;
+      transition: width 1s ease;
+    }
+
+    .reveal-code {
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #E879A4, #C084FC);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 8px 0 18px;
+      animation: scale-in .6s ease-out both;
+      animation-delay: .2s;
+    }
+    .reveal-nick {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 14px;
+      animation: slide-up .5s ease-out both;
+      animation-delay: .4s;
+    }
+    .reveal-intro {
+      font-size: 14px;
       color: var(--color-text-light);
-      font-size: 13px;
       line-height: 1.7;
-      text-align: center;
+      max-width: 320px;
+      margin: 0 auto;
+      animation: slide-up .5s ease-out both;
+      animation-delay: .6s;
     }
-    .actions-row {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 10px;
+    .match-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #FFE4EE, #F3E0FF);
+      color: var(--color-primary-dark);
+      font-weight: 800;
+      font-size: 13px;
+      animation: slide-up .5s ease-out both;
+      animation-delay: .8s;
     }
 
-    /* 결과 페이지 */
-    .result-layout { display: grid; gap: 18px; }
+    .step-cta {
+      width: 100%;
+      max-width: 320px;
+      padding: 16px 22px;
+      background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
+      color: #fff;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 15px;
+      box-shadow: var(--shadow-btn);
+      margin-top: 24px;
+      animation: slide-up .5s ease-out both;
+      animation-delay: .9s;
+    }
+    .step-cta:hover { box-shadow: 0 6px 26px rgba(232,121,164,0.40); transform: translateY(-1px); }
 
-    .poster-box {
-      border-radius: var(--radius);
+    .dot-indicator {
+      display: flex;
+      gap: 6px;
+      margin: 18px 0 6px;
+      justify-content: center;
+    }
+    .dot-indicator > div {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #F0E0EA;
+      transition: all .3s ease;
+    }
+    .dot-indicator > div.active {
+      background: var(--color-primary);
+      width: 24px;
+    }
+    .dot-indicator > div.done { background: rgba(232,121,164,0.4); }
+
+    /* ─── 최종 카드 ─── */
+    .final-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .final-poster {
+      border-radius: var(--radius-lg);
       padding: 28px 22px;
       background: linear-gradient(135deg, #FFE4EE 0%, #F3E0FF 100%);
       text-align: center;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow-card);
     }
-    .poster-box::before {
+    .final-poster::before {
       content: '';
       position: absolute;
       top: -40px;
@@ -365,161 +565,99 @@
       border-radius: 50%;
       background: radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%);
     }
-    .poster-image {
-      width: 100%;
-      max-width: 280px;
-      max-height: 320px;
-      object-fit: contain;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.6);
-      position: relative;
-      z-index: 1;
-    }
-    .poster-box.no-image .poster-image { display: none; }
-    .poster-box.no-image::after {
-      content: '🎀';
-      display: block;
-      font-size: 64px;
-      margin-bottom: 10px;
+    .final-poster .badge-emoji {
+      font-size: 60px;
       animation: bounce-slow 2.4s ease-in-out infinite;
       position: relative;
       z-index: 1;
     }
-    .poster-caption {
-      margin-top: 14px;
-      color: var(--color-primary-dark);
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.7;
+    .final-poster img {
+      max-width: 220px;
+      max-height: 240px;
+      object-fit: contain;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.5);
       position: relative;
       z-index: 1;
     }
-
-    .type-box {
-      border-radius: var(--radius);
-      padding: 24px 22px;
-      background: #fff;
-      border: 1px solid #FCE7F0;
-      text-align: center;
-    }
-    .type-kicker {
-      font-size: 12px;
-      color: var(--color-secondary);
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
-    }
-    .type-name {
-      font-size: clamp(28px, 7vw, 38px);
+    .final-poster .code {
+      margin-top: 14px;
+      font-size: 36px;
       font-weight: 900;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, #E879A4, #C084FC);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      line-height: 1.15;
+      position: relative;
+      z-index: 1;
     }
-    .match {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 16px;
-      padding: 9px 16px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #FFE4EE, #F3E0FF);
-      color: var(--color-primary-dark);
-      font-weight: 800;
-      font-size: 13px;
-    }
-    .type-subname {
-      margin-top: 14px;
-      color: var(--color-text-light);
-      font-size: 13px;
-      line-height: 1.75;
-    }
+    .final-poster .nick { font-size: 18px; font-weight: 800; color: var(--color-primary-dark); margin-top: 4px; position: relative; z-index: 1; }
+    .final-poster .intro { font-size: 13px; color: var(--color-text-light); margin-top: 10px; line-height: 1.7; position: relative; z-index: 1; }
 
-    .analysis-box, .dim-box, .note-box {
+    .final-card {
+      background: #fff;
       border-radius: var(--radius);
       padding: 22px 20px;
-      background: #fff;
-      border: 1px solid #FCE7F0;
+      border: 1px solid var(--color-line);
+      box-shadow: var(--shadow-card);
     }
-    .analysis-box h3, .dim-box h3, .note-box h3 {
+    .final-card h3 {
       font-size: 15px;
       font-weight: 800;
       color: var(--color-primary-dark);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .analysis-box p {
-      font-size: 14.5px;
+    .final-card .desc {
+      font-size: 14px;
       line-height: 1.95;
       color: var(--color-text);
       white-space: pre-wrap;
-      word-break: keep-all;
     }
-    .dim-list { display: grid; gap: 10px; }
+    .dim-list { display: flex; flex-direction: column; gap: 10px; }
     .dim-item {
-      border-radius: 16px;
-      padding: 14px 16px;
+      border-radius: 14px;
+      padding: 12px 14px;
       background: linear-gradient(180deg, #FFFAFC, #FFF5F9);
-      border: 1px solid #FCE7F0;
+      border: 1px solid var(--color-line);
     }
     .dim-item-top {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 10px;
-      margin-bottom: 6px;
-      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
     }
-    .dim-item-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--color-text);
-    }
+    .dim-item-name { font-size: 12.5px; font-weight: 800; color: var(--color-text); }
     .dim-item-score {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       padding: 3px 10px;
       border-radius: 999px;
       background: linear-gradient(135deg, #E879A4, #C084FC);
       color: #fff;
-      white-space: nowrap;
     }
-    .dim-item p {
-      font-size: 12.5px;
-      line-height: 1.75;
-      color: var(--color-text-light);
-      word-break: keep-all;
-    }
-
-    .note-box p {
-      font-size: 13px;
-      line-height: 1.75;
-      color: var(--color-text-light);
-      word-break: keep-all;
-    }
+    .dim-item p { font-size: 12px; line-height: 1.7; color: var(--color-text-light); }
 
     .author-box {
-      border-radius: var(--radius);
       background: #fff;
-      border: 1px solid #FCE7F0;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-line);
       overflow: hidden;
     }
     .author-box summary {
       list-style: none;
       cursor: pointer;
-      padding: 18px 20px;
-      font-size: 15px;
+      padding: 16px 20px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--color-primary-dark);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      align-items: center;
     }
     .author-box summary::-webkit-details-marker { display: none; }
     .author-box summary::after {
@@ -528,133 +666,110 @@
       font-weight: 800;
       color: var(--color-primary);
       background: #FFE4EE;
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: 999px;
     }
     .author-box[open] summary::after { content: '접기 ✿'; }
-    .author-content {
-      border-top: 1px dashed #F5D9E6;
-      padding: 4px 20px 20px;
-    }
-    .author-content p {
-      margin-top: 14px;
-      font-size: 13px;
-      line-height: 1.85;
-      color: var(--color-text);
-      word-break: keep-all;
-    }
+    .author-box .body { border-top: 1px dashed var(--color-line); padding: 4px 20px 18px; }
+    .author-box .body p { margin-top: 12px; font-size: 13px; line-height: 1.85; color: var(--color-text); }
 
-    .result-actions {
+    .final-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 6px;
+      margin-top: 4px;
+    }
+    .final-actions button {
+      padding: 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .btn-restart {
+      background: #fff;
+      color: var(--color-primary);
+      border: 2px solid #FFE4EE;
+    }
+    .btn-restart:hover { border-color: var(--color-primary); background: #FFF9FC; }
+    .btn-home {
+      background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
+      color: #fff;
+      box-shadow: var(--shadow-btn);
     }
 
-    @media (max-width: 480px) {
-      .shell { padding: 18px 14px 42px; }
-      .hero { padding: 28px 20px 26px; }
-      .test-wrap, .result-wrap { padding: 20px 16px; }
-      .hero h1 { font-size: 22px; }
-      .question-title { font-size: 15px; }
-      .type-name { font-size: 30px; }
+    .footer-tip {
+      text-align: center;
+      font-size: 11px;
+      color: var(--color-text-dim);
+      line-height: 1.7;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 380px) {
+      .shell { padding: 14px 16px 28px; }
+      .intro-title { font-size: 24px; }
+      .quiz-question { font-size: 16px; }
+      .quiz-question.long { font-size: 13px; }
+      .reveal-code { font-size: 46px; }
     }
   </style>
 </head>
 <body>
   <div class="shell">
+    <span class="deco d1">🌷</span>
+    <span class="deco d2">✨</span>
+    <span class="deco d3">💖</span>
+    <span class="deco d4">🌸</span>
+    <span class="deco d5">✨</span>
+    <span class="deco d6">💕</span>
+
+    <!-- INTRO -->
     <section id="intro" class="screen active">
-      <span class="deco d1">🌷</span>
-      <span class="deco d2">✨</span>
-      <span class="deco d3">💖</span>
-      <span class="deco d4">🌸</span>
-      <span class="deco d5">✨</span>
-      <span class="deco d6">💕</span>
-      <div class="hero card">
-        <div class="brand-logo">SBTI</div>
-        <h1>MBTI는 한물갔다,<br/>이제 SBTI 차례 ✨</h1>
-        <p class="sub">31개의 짖궂은 질문으로 알아보는<br/>나만의 인격 유형 💕</p>
-        <div class="hero-actions">
-          <button id="startBtn" class="btn-primary">테스트 시작하기 🌸</button>
-        </div>
-        <div class="credits">
-          <div>⏱ 약 5분 소요</div>
-          <div style="margin-top:8px;">원작자: <a href="https://space.bilibili.com/417038183">비리비리(B站) @蛆肉儿串儿</a></div>
-          <div>한국어판: 비공식 팬 번역</div>
-        </div>
+      <div class="brand-logo">SBTI</div>
+      <h1 class="intro-title">MBTI는 한물갔다,<br/>이제 SBTI 차례 ✨</h1>
+      <p class="intro-sub">31개의 짖궂은 질문으로 알아보는<br/>나만의 인격 유형 💕</p>
+      <button id="startBtn" class="start-btn">테스트 시작하기 🌸</button>
+      <div class="intro-meta">
+        ⏱ 약 5분 소요<br/>
+        원작: <a href="https://space.bilibili.com/417038183">비리비리(B站) @蛆肉儿串儿</a><br/>
+        한국어판: 비공식 팬 번역
       </div>
     </section>
 
-    <section id="test" class="screen">
-      <div class="test-wrap card">
-        <div class="topbar">
-          <div class="progress"><span id="progressBar"></span></div>
-          <div class="progress-text" id="progressText">0 / 31</div>
+    <!-- QUIZ -->
+    <section id="quiz" class="screen">
+      <div class="quiz-progress">
+        <div class="quiz-progress-text">
+          <span id="progressNum">1 / 31</span>
+          <span class="pct" id="progressPct">3%</span>
         </div>
-
-        <div id="questionList" class="question-list"></div>
-
-        <div class="actions-bottom">
-          <div class="hint" id="testHint">전부 골라야 통과. 세상은 이미 충분히 어지러우니, 적어도 문제만큼은 끝까지 풀자.</div>
-          <div class="actions-row">
-            <button id="backIntroBtn" class="btn-secondary">홈으로</button>
-            <button id="submitBtn" class="btn-primary" disabled>결과 보기 🎀</button>
-          </div>
-        </div>
+        <div class="quiz-progress-bar"><span id="progressBar"></span></div>
       </div>
+      <div class="quiz-stage-msg" id="stageMsg"></div>
+      <div class="quiz-body">
+        <div class="quiz-emoji" id="quizEmoji">🌸</div>
+        <div id="quizQuestion" class="quiz-question"></div>
+        <div id="quizOptions" class="options"></div>
+      </div>
+      <button id="backBtn" class="quiz-back" style="display:none;">← 이전 문항</button>
     </section>
 
+    <!-- ANALYZING -->
+    <section id="analyzing" class="screen">
+      <div class="analyzing-icon">
+        <div class="main">🔮</div>
+        <div class="sub1">✨</div>
+        <div class="sub2">💖</div>
+      </div>
+      <h2 class="analyzing-title"><span class="accent">당신의 인격</span>을<br/>분석하고 있어요...</h2>
+      <p class="analyzing-sub">잠시만 기다려주세요</p>
+      <div class="dots"><div></div><div></div><div></div></div>
+    </section>
+
+    <!-- RESULT -->
     <section id="result" class="screen">
-      <div class="result-wrap card">
-        <div class="result-layout">
-          <div class="result-top">
-            <div class="poster-box" id="posterBox">
-              <img id="posterImage" class="poster-image" alt="인격 결과 이미지" />
-              <div id="posterCaption" class="poster-caption">어때, 내 손바닥 안이지?</div>
-            </div>
-
-            <div class="type-box">
-              <div class="type-kicker" id="resultModeKicker">당신의 메인 유형</div>
-              <div class="type-name" id="resultTypeName">CTRL (장악자)</div>
-              <div class="match" id="matchBadge">매칭도 92%</div>
-              <div class="type-subname" id="resultTypeSub">시스템 메모가 여기에 표시됩니다.</div>
-            </div>
-          </div>
-
-          <div class="analysis-box">
-            <h3>💌 이 인격에 대한 간단한 해설</h3>
-            <p id="resultDesc"></p>
-          </div>
-
-          <div class="dim-box">
-            <h3>📊 15차원 점수</h3>
-            <div id="dimList" class="dim-list"></div>
-          </div>
-
-          <div class="note-box">
-            <h3>🌷 친절한 안내</h3>
-            <p id="funNote">본 테스트는 오락용일 뿐이니, 진단 · 면접 · 소개팅 · 이별 · 굿 · 사주 · 인생 판결문으로 쓰지 마세요.</p>
-          </div>
-
-          <details class="author-box">
-            <summary>💖 작가의 말</summary>
-            <div class="author-content">
-              <p>본 테스트는 비리비리 유저 蛆肉儿串儿(UID 417038183)이 처음 공개했으며, 술을 좋아하는 친구에게 금주를 권하기 위한 취지로 만들어졌습니다.</p>
-              <p>작가의 인격이 SHIT 염세자라서, 모두를 평등하게 공격해버렸습니다. 정말 죄송합니다!! 그래도 저는 절세 미녀라 분명 용서해주실 거예요. 비리비리에 계신 분들은 저를 팔로우해주셔도 됩니다.</p>
-              <p>오락성과 전문성의 균형을 잘 못 맞춰서 일부 인격 해석은 모호하거나 완전히 부정확할 수 있습니다(예: 찐따가 진짜 찐따가 아닐 수도). 기분 나쁘셨다면 정말 죄송합니다!!</p>
-              <p>또 시간과 정신이 한정된지라 일단 대충 만들어본 거니, 차차 보완·수정해가겠습니다. 어쨌든 재미가 우선이니 부디 영리 목적으로는 사용하지 말아주세요.</p>
-              <p style="opacity:.7; font-size:12px;">한국어판 안내: 원본의 중국 인터넷 밈·브랜드는 한국 정서에 맞춰 일부 의역되었습니다.</p>
-            </div>
-          </details>
-        </div>
-
-        <div class="result-actions">
-          <button id="restartBtn" class="btn-secondary">다시 하기</button>
-          <button id="toTopBtn" class="btn-primary">홈으로 🌸</button>
-        </div>
-      </div>
+      <div id="resultStep" class="step-screen"></div>
     </section>
-
   </div>
 
   <script>
@@ -1279,286 +1394,471 @@
 
     const DRUNK_TRIGGER_QUESTION_ID = 'drink_gate_q2';
 
-    const app = {
+    // ─── 상태 ───
+    const state = {
       shuffledQuestions: [],
+      visibleQuestions: [],
+      questionIndex: 0,
       answers: {},
-      previewMode: false
+      result: null,
+      resultStep: 0,
+      animLock: false,
     };
 
     const screens = {
       intro: document.getElementById('intro'),
-      test: document.getElementById('test'),
-      result: document.getElementById('result')
+      quiz: document.getElementById('quiz'),
+      analyzing: document.getElementById('analyzing'),
+      result: document.getElementById('result'),
     };
 
-    const questionList = document.getElementById('questionList');
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-    const submitBtn = document.getElementById('submitBtn');
-    const testHint = document.getElementById('testHint');
-
     function showScreen(name) {
-      Object.entries(screens).forEach(([key, el]) => {
-        el.classList.toggle('active', key === name);
-      });
+      Object.entries(screens).forEach(([k, el]) => el.classList.toggle('active', k === name));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        [a[i], a[j]] = [a[j], a[i]];
       }
-      return arr;
-    }
-
-    function getVisibleQuestions() {
-      const visible = [...app.shuffledQuestions];
-      const gateIndex = visible.findIndex(q => q.id === 'drink_gate_q1');
-      if (gateIndex !== -1 && app.answers['drink_gate_q1'] === 3) {
-        visible.splice(gateIndex + 1, 0, specialQuestions[1]);
-      }
-      return visible;
-    }
-
-    function getQuestionMetaLabel(q) {
-      if (q.special) return '보너스 문항';
-      return app.previewMode ? dimensionMeta[q.dim].name : '차원 숨김';
+      return a;
     }
 
     function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
-    function renderQuestions() {
-      const visibleQuestions = getVisibleQuestions();
-      questionList.innerHTML = '';
-      visibleQuestions.forEach((q, index) => {
-        const card = document.createElement('article');
-        card.className = 'question';
-        card.innerHTML = `
-          <div class="question-meta">
-            <div class="badge">${index + 1}번 문항</div>
-            <div>${getQuestionMetaLabel(q)}</div>
-          </div>
-          <div class="question-title">${escapeHtml(q.text)}</div>
-          <div class="options">
-            ${q.options.map((opt, i) => {
-              const code = ['A', 'B', 'C', 'D'][i] || String(i + 1);
-              const checked = app.answers[q.id] === opt.value ? 'checked' : '';
-              return `
-                <label class="option">
-                  <input type="radio" name="${q.id}" value="${opt.value}" ${checked} />
-                  <div class="option-code">${code}</div>
-                  <div>${escapeHtml(opt.label)}</div>
-                </label>
-              `;
-            }).join('')}
-          </div>
-        `;
-        questionList.appendChild(card);
+    // ─── 시작 ───
+    function startQuiz() {
+      state.answers = {};
+      state.questionIndex = 0;
+      const shuffled = shuffle(questions);
+      const insertIdx = Math.floor(Math.random() * shuffled.length) + 1;
+      state.shuffledQuestions = [
+        ...shuffled.slice(0, insertIdx),
+        specialQuestions[0],
+        ...shuffled.slice(insertIdx),
+      ];
+      rebuildVisible();
+      showScreen('quiz');
+      renderQuestion();
+    }
+
+    function rebuildVisible() {
+      const base = [...state.shuffledQuestions];
+      const idx = base.findIndex(q => q.id === 'drink_gate_q1');
+      if (idx !== -1 && state.answers['drink_gate_q1'] === 3) {
+        base.splice(idx + 1, 0, specialQuestions[1]);
+      }
+      state.visibleQuestions = base;
+    }
+
+    // ─── 문항 렌더 ───
+    const QUIZ_EMOJIS = ['🌸','💕','✨','🌷','💖','🎀','🦋','🌟','💫','🌺'];
+
+    function renderQuestion() {
+      const total = state.visibleQuestions.length;
+      const idx = state.questionIndex;
+      const q = state.visibleQuestions[idx];
+      if (!q) return;
+
+      // 진행도
+      const num = idx + 1;
+      const pct = Math.round((num / total) * 100);
+      document.getElementById('progressNum').textContent = `${num} / ${total}`;
+      document.getElementById('progressPct').textContent = `${pct}%`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+
+      // 단계 메시지 (1/3, 2/3 지점)
+      const stageMsg = document.getElementById('stageMsg');
+      const third = Math.floor(total / 3);
+      if (num === third + 1) {
+        stageMsg.innerHTML = '<div class="stage-pill">잘하고 있어요! 조금만 더 💪</div>';
+      } else if (num === third * 2 + 1) {
+        stageMsg.innerHTML = '<div class="stage-pill">거의 다 왔어요! ✨</div>';
+      } else {
+        stageMsg.innerHTML = '';
+      }
+
+      // 이모지 (질문마다 회전)
+      document.getElementById('quizEmoji').textContent = QUIZ_EMOJIS[idx % QUIZ_EMOJIS.length];
+
+      // 질문 텍스트 (긴 문항은 별도 스타일)
+      const qEl = document.getElementById('quizQuestion');
+      qEl.textContent = q.text;
+      qEl.className = 'quiz-question' + (q.text.length > 60 ? ' long' : '');
+
+      // 옵션
+      const opts = document.getElementById('quizOptions');
+      opts.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const code = ['A','B','C','D'][i] || String(i + 1);
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.style.animationDelay = `${0.1 + i * 0.08}s`;
+        btn.innerHTML = `<span class="option-code">${code}</span><span>${escapeHtml(opt.label)}</span>`;
+        const isSelected = state.answers[q.id] === opt.value;
+        if (isSelected) btn.classList.add('selected');
+        btn.addEventListener('click', () => selectOption(q, opt, btn));
+        opts.appendChild(btn);
       });
 
-      questionList.querySelectorAll('input[type="radio"]').forEach(input => {
-        input.addEventListener('change', (e) => {
-          const { name, value } = e.target;
-          app.answers[name] = Number(value);
-
-          if (name === 'drink_gate_q1') {
-            if (Number(value) !== 3) {
-              delete app.answers['drink_gate_q2'];
-            }
-            renderQuestions();
-            return;
-          }
-
-          updateProgress();
-        });
-      });
-
-      updateProgress();
+      // 이전 버튼
+      document.getElementById('backBtn').style.display = idx > 0 ? 'block' : 'none';
     }
 
-    function updateProgress() {
-      const visibleQuestions = getVisibleQuestions();
-      const total = visibleQuestions.length;
-      const done = visibleQuestions.filter(q => app.answers[q.id] !== undefined).length;
-      const percent = total ? (done / total) * 100 : 0;
-      progressBar.style.width = `${percent}%`;
-      progressText.textContent = `${done} / ${total}`;
-      const complete = done === total && total > 0;
-      submitBtn.disabled = !complete;
-      testHint.textContent = complete
-        ? '다 끝났다. 이제 너의 전자 혼백을 결과 페이지의 심판대에 올릴 시간이다.'
-        : '전부 골라야 통과. 세상은 이미 충분히 어지러우니, 적어도 문제만큼은 끝까지 풀자.';
+    function selectOption(q, opt, btn) {
+      if (state.animLock) return;
+      state.animLock = true;
+
+      // 시각적 선택 표시
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      state.answers[q.id] = opt.value;
+
+      // drink_gate_q1 처리: 음주(3) 선택 시 q2 삽입
+      if (q.id === 'drink_gate_q1') {
+        rebuildVisible();
+      }
+
+      setTimeout(() => {
+        state.animLock = false;
+        if (state.questionIndex < state.visibleQuestions.length - 1) {
+          state.questionIndex++;
+          renderQuestion();
+        } else {
+          goToAnalyzing();
+        }
+      }, 320);
     }
 
+    function goBack() {
+      if (state.questionIndex > 0) {
+        state.questionIndex--;
+        renderQuestion();
+      }
+    }
+
+    // ─── 분석 화면 ───
+    function goToAnalyzing() {
+      showScreen('analyzing');
+      setTimeout(() => {
+        state.result = computeResult();
+        state.resultStep = 0;
+        showScreen('result');
+        renderResultStep();
+      }, 2400);
+    }
+
+    // ─── 점수 계산 ───
     function sumToLevel(score) {
       if (score <= 3) return 'L';
       if (score === 4) return 'M';
       return 'H';
     }
-
-    function levelNum(level) {
-      return { L: 1, M: 2, H: 3 }[level];
-    }
-
-    function parsePattern(pattern) {
-      return pattern.replace(/-/g, '').split('');
-    }
-
-    function getDrunkTriggered() {
-      return app.answers[DRUNK_TRIGGER_QUESTION_ID] === 2;
-    }
+    function levelNum(level) { return { L:1, M:2, H:3 }[level]; }
+    function parsePattern(p) { return p.replace(/-/g, '').split(''); }
+    function getDrunkTriggered() { return state.answers[DRUNK_TRIGGER_QUESTION_ID] === 2; }
 
     function computeResult() {
       const rawScores = {};
       const levels = {};
-      Object.keys(dimensionMeta).forEach(dim => { rawScores[dim] = 0; });
+      Object.keys(dimensionMeta).forEach(d => { rawScores[d] = 0; });
+      questions.forEach(q => { rawScores[q.dim] += Number(state.answers[q.id] || 0); });
+      Object.entries(rawScores).forEach(([d, s]) => { levels[d] = sumToLevel(s); });
 
-      questions.forEach(q => {
-        rawScores[q.dim] += Number(app.answers[q.id] || 0);
-      });
-
-      Object.entries(rawScores).forEach(([dim, score]) => {
-        levels[dim] = sumToLevel(score);
-      });
-
-      const userVector = dimensionOrder.map(dim => levelNum(levels[dim]));
-      const ranked = NORMAL_TYPES.map(type => {
-        const vector = parsePattern(type.pattern).map(levelNum);
-        let distance = 0;
-        let exact = 0;
-        for (let i = 0; i < vector.length; i++) {
-          const diff = Math.abs(userVector[i] - vector[i]);
-          distance += diff;
+      const userVec = dimensionOrder.map(d => levelNum(levels[d]));
+      const ranked = NORMAL_TYPES.map(t => {
+        const v = parsePattern(t.pattern).map(levelNum);
+        let dist = 0, exact = 0;
+        for (let i = 0; i < v.length; i++) {
+          const diff = Math.abs(userVec[i] - v[i]);
+          dist += diff;
           if (diff === 0) exact += 1;
         }
-        const similarity = Math.max(0, Math.round((1 - distance / 30) * 100));
-        return { ...type, ...TYPE_LIBRARY[type.code], distance, exact, similarity };
+        const sim = Math.max(0, Math.round((1 - dist / 30) * 100));
+        return { ...t, ...TYPE_LIBRARY[t.code], distance: dist, exact, similarity: sim };
       }).sort((a, b) => {
         if (a.distance !== b.distance) return a.distance - b.distance;
         if (b.exact !== a.exact) return b.exact - a.exact;
         return b.similarity - a.similarity;
       });
 
-      const bestNormal = ranked[0];
-      const drunkTriggered = getDrunkTriggered();
-
-      let finalType;
-      let modeKicker = '당신의 메인 유형';
-      let badge = `매칭도 ${bestNormal.similarity}% · 정확 일치 ${bestNormal.exact}/15차원`;
-      let sub = '차원 적중률이 높습니다. 현재 결과는 당신의 1차 인격 초상으로 볼 수 있습니다.';
-      let special = false;
-      let secondaryType = null;
-
-      if (drunkTriggered) {
+      const best = ranked[0];
+      let finalType, kicker, badge, sub, special = false;
+      if (getDrunkTriggered()) {
         finalType = TYPE_LIBRARY.DRUNK;
-        secondaryType = bestNormal;
-        modeKicker = '숨겨진 인격이 활성화됨';
-        badge = '매칭도 100% · 알코올 이상 인자가 인계됨';
+        kicker = '숨겨진 인격이 활성화됨';
+        badge = '매칭도 100% · 알코올 인자 인계';
         sub = '에탄올 친화도가 너무 강해, 시스템이 일반 인격 심판을 건너뛰었습니다.';
         special = true;
-      } else if (bestNormal.similarity < 60) {
+      } else if (best.similarity < 60) {
         finalType = TYPE_LIBRARY.HHHH;
-        modeKicker = '시스템 강제 보정';
-        badge = `표준 인격 라이브러리 최고 매칭이 ${bestNormal.similarity}%에 불과`;
-        sub = '표준 인격 라이브러리가 당신의 뇌 회로 앞에서 단체 파업을 일으켜, 시스템이 당신을 강제로 HHHH에 배정했습니다.';
+        kicker = '시스템 강제 보정';
+        badge = `최고 매칭 ${best.similarity}%에 불과`;
+        sub = '표준 인격 라이브러리가 당신의 뇌 회로 앞에서 단체 파업을 일으켰습니다.';
         special = true;
       } else {
-        finalType = bestNormal;
+        finalType = best;
+        kicker = '당신의 메인 유형';
+        badge = `매칭도 ${best.similarity}% · 정확 ${best.exact}/15차원`;
+        sub = '차원 적중률이 높습니다. 1차 인격 초상으로 볼 수 있어요.';
       }
 
+      // 5개 모델별 평균 (차원 점수 1~9 → 백분율)
+      const MODELS = [
+        { key: '자아',  dims: ['S1','S2','S3'],   emoji: '🪞' },
+        { key: '감정',  dims: ['E1','E2','E3'],   emoji: '💗' },
+        { key: '태도',  dims: ['A1','A2','A3'],   emoji: '🌍' },
+        { key: '행동',  dims: ['Ac1','Ac2','Ac3'],emoji: '⚡' },
+        { key: '사교',  dims: ['So1','So2','So3'],emoji: '🌸' },
+      ];
+      const modelScores = MODELS.map(m => {
+        const sum = m.dims.reduce((acc, d) => acc + (rawScores[d] || 0), 0);
+        // 각 차원 최대 6점 → 모델 합 최대 18, 최소 6
+        const pct = Math.round(((sum - 6) / 12) * 100);
+        return { ...m, pct: Math.max(5, Math.min(100, pct)) };
+      });
+
+      // 강한 / 약한 차원 추출
+      const dimEntries = dimensionOrder.map(d => ({
+        dim: d,
+        name: dimensionMeta[d].name,
+        level: levels[d],
+        score: rawScores[d],
+        text: DIM_EXPLANATIONS[d][levels[d]],
+      }));
+      const sortedByScore = [...dimEntries].sort((a, b) => b.score - a.score);
+      const topDims = sortedByScore.slice(0, 3);
+      const lowDims = [...sortedByScore].reverse().slice(0, 3);
+
       return {
-        rawScores,
-        levels,
-        ranked,
-        bestNormal,
-        finalType,
-        modeKicker,
-        badge,
-        sub,
-        special,
-        secondaryType
+        rawScores, levels, ranked, best, finalType, kicker, badge, sub, special,
+        modelScores, dimEntries, topDims, lowDims,
       };
     }
 
-    function renderDimList(result) {
-      const dimList = document.getElementById('dimList');
-      dimList.innerHTML = dimensionOrder.map(dim => {
-        const level = result.levels[dim];
-        const explanation = DIM_EXPLANATIONS[dim][level];
-        return `
-          <div class="dim-item">
-            <div class="dim-item-top">
-              <div class="dim-item-name">${dimensionMeta[dim].name}</div>
-              <div class="dim-item-score">${level} / ${result.rawScores[dim]}점</div>
-            </div>
-            <p>${explanation}</p>
-          </div>
-        `;
+    // ─── 결과 단계 렌더 ───
+    // 단계: 0=hint1(메인유형), 1=hint2(강한면), 2=hint3(약한면),
+    //       3=axis(5모델), 4=reveal(코드공개), 5=final(최종카드)
+    const TOTAL_STEPS = 6;
+
+    function renderResultStep() {
+      const r = state.result;
+      const step = state.resultStep;
+      const root = document.getElementById('resultStep');
+
+      if (step === 0) renderHint1(root, r);
+      else if (step === 1) renderHint2(root, r);
+      else if (step === 2) renderHint3(root, r);
+      else if (step === 3) renderAxis(root, r);
+      else if (step === 4) renderReveal(root, r);
+      else if (step === 5) renderFinal(root, r);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function dotIndicator(step) {
+      const dots = Array.from({ length: TOTAL_STEPS - 1 }).map((_, i) => {
+        let cls = '';
+        if (i === step) cls = 'active';
+        else if (i < step) cls = 'done';
+        return `<div class="${cls}"></div>`;
       }).join('');
+      return `<div class="dot-indicator">${dots}</div>`;
     }
 
-    function renderResult() {
-      const result = computeResult();
-      const type = result.finalType;
+    function renderHint1(root, r) {
+      root.innerHTML = `
+        <div class="step-icon"><div class="emoji-lg">🔮</div></div>
+        <div class="step-kicker">분석이 끝났어요!</div>
+        <div class="step-heading"><span class="grad">당신의 숨은 인격은...</span></div>
+        <div class="hint-cards">
+          <div class="hint-card" style="animation-delay:.5s;">
+            <span class="label">💫 첫 번째 단서</span>
+            마음 깊은 곳에서 어떤 목소리가 들려와요. 작가가 당신을 위해 준비한 인격이 곧 모습을 드러냅니다.
+          </div>
+          <div class="hint-card" style="animation-delay:.7s;">
+            <span class="label">🎀 두 번째 단서</span>
+            당신은 <strong>${r.finalType.code}</strong>라는 코드명을 가진 인격에 가까워요. 어떤 의미일까요?
+          </div>
+        </div>
+        ${dotIndicator(0)}
+        <button class="step-cta" id="nextStepBtn">다음 →</button>
+      `;
+      attachNext();
+    }
 
-      document.getElementById('resultModeKicker').textContent = result.modeKicker;
-      document.getElementById('resultTypeName').textContent = `${type.code} (${type.cn})`;
-      document.getElementById('matchBadge').textContent = result.badge;
-      document.getElementById('resultTypeSub').textContent = result.sub;
-      document.getElementById('resultDesc').textContent = type.desc;
-      document.getElementById('posterCaption').textContent = type.intro;
-      document.getElementById('funNote').textContent = result.special
-        ? '본 테스트는 오락용입니다. 숨겨진 인격과 HHHH 보정은 작가가 일부러 심어둔 장난이니, 의학·심리학·관상학·명리학·심령학적 근거로 쓰지 마세요.'
-        : '본 테스트는 오락용일 뿐, 진단 · 면접 · 소개팅 · 이별 · 굿 · 사주 · 인생 판결문으로 쓰지 마세요. 웃어도 좋지만, 너무 진지하게 받아들이진 마세요.';
+    function renderHint2(root, r) {
+      const top = r.topDims;
+      root.innerHTML = `
+        <div class="step-icon"><div class="emoji-lg">💪</div></div>
+        <div class="step-kicker">당신의 강한 면</div>
+        <div class="step-heading"><span class="grad">이런 점이 두드러져요</span></div>
+        <div class="hint-cards">
+          ${top.map((d, i) => `
+            <div class="hint-card" style="animation-delay:${0.4 + i * 0.15}s;">
+              <span class="label">${d.name.replace(/^[A-Za-z0-9]+ /, '')} · ${d.level}</span>
+              ${escapeHtml(d.text)}
+            </div>
+          `).join('')}
+        </div>
+        ${dotIndicator(1)}
+        <button class="step-cta" id="nextStepBtn">다음 →</button>
+      `;
+      attachNext();
+    }
 
-      const posterBox = document.getElementById('posterBox');
-      const posterImage = document.getElementById('posterImage');
-      const imageSrc = TYPE_IMAGES[type.code];
-      if (imageSrc) {
-        posterImage.src = imageSrc;
-        posterImage.alt = `${type.code} (${type.cn})`;
-        posterImage.onerror = () => {
-          posterImage.removeAttribute('src');
-          posterImage.alt = '';
-          posterBox.classList.add('no-image');
+    function renderHint3(root, r) {
+      const low = r.lowDims;
+      root.innerHTML = `
+        <div class="step-icon"><div class="emoji-lg">🌙</div></div>
+        <div class="step-kicker">그리고 약한 면</div>
+        <div class="step-heading"><span class="grad">반대로 이런 면도</span></div>
+        <div class="hint-cards">
+          ${low.map((d, i) => `
+            <div class="hint-card" style="animation-delay:${0.4 + i * 0.15}s;">
+              <span class="label">${d.name.replace(/^[A-Za-z0-9]+ /, '')} · ${d.level}</span>
+              ${escapeHtml(d.text)}
+            </div>
+          `).join('')}
+        </div>
+        ${dotIndicator(2)}
+        <button class="step-cta" id="nextStepBtn">5가지 모델 보기 →</button>
+      `;
+      attachNext();
+    }
+
+    function renderAxis(root, r) {
+      root.innerHTML = `
+        <div class="step-icon"><div class="emoji-lg">📊</div></div>
+        <div class="step-kicker">5가지 모델 분석</div>
+        <div class="step-heading"><span class="grad">이런 균형을 가졌어요</span></div>
+        <div class="axis-list">
+          ${r.modelScores.map((m, i) => `
+            <div class="axis-item" style="animation-delay:${0.3 + i * 0.12}s;">
+              <div class="axis-top">
+                <span class="axis-name">${m.emoji} ${m.key} 모델</span>
+                <span class="axis-pct">${m.pct}%</span>
+              </div>
+              <div class="axis-bar"><span style="width:0;" data-w="${m.pct}"></span></div>
+            </div>
+          `).join('')}
+        </div>
+        ${dotIndicator(3)}
+        <button class="step-cta" id="nextStepBtn">결과 타입 보기 →</button>
+      `;
+      // 막대 애니메이션
+      setTimeout(() => {
+        document.querySelectorAll('.axis-bar > span').forEach(s => {
+          s.style.width = s.dataset.w + '%';
+        });
+      }, 100);
+      attachNext();
+    }
+
+    function renderReveal(root, r) {
+      const t = r.finalType;
+      root.innerHTML = `
+        <div class="step-icon"><div class="emoji-lg">✨</div></div>
+        <div class="step-kicker">${r.kicker}</div>
+        <div class="reveal-code">${t.code}</div>
+        <div class="reveal-nick">${t.cn}</div>
+        <div class="reveal-intro">${escapeHtml(t.intro)}</div>
+        <div class="match-pill">${escapeHtml(r.badge)}</div>
+        ${dotIndicator(4)}
+        <button class="step-cta" id="nextStepBtn">자세한 카드 보기 →</button>
+      `;
+      attachNext();
+    }
+
+    function renderFinal(root, r) {
+      const t = r.finalType;
+      const imgSrc = TYPE_IMAGES[t.code];
+      root.innerHTML = `
+        <div class="final-wrap">
+          <div class="final-poster">
+            ${imgSrc
+              ? `<img id="finalImg" src="${imgSrc}" alt="${t.code}" />`
+              : `<div class="badge-emoji">🎀</div>`}
+            <div class="code">${t.code}</div>
+            <div class="nick">${t.cn}</div>
+            <div class="intro">${escapeHtml(t.intro)}</div>
+          </div>
+
+          <div class="final-card">
+            <h3>💌 인격 해설</h3>
+            <p class="desc">${escapeHtml(t.desc)}</p>
+          </div>
+
+          <div class="final-card">
+            <h3>📊 15차원 점수</h3>
+            <div class="dim-list">
+              ${r.dimEntries.map(d => `
+                <div class="dim-item">
+                  <div class="dim-item-top">
+                    <span class="dim-item-name">${d.name}</span>
+                    <span class="dim-item-score">${d.level} · ${d.score}점</span>
+                  </div>
+                  <p>${escapeHtml(d.text)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="final-card">
+            <h3>🌷 친절한 안내</h3>
+            <p style="font-size:13px; line-height:1.75; color:var(--color-text-light);">
+              ${r.special
+                ? '본 테스트는 오락용입니다. 숨겨진 인격과 HHHH 보정은 작가가 일부러 심어둔 장난이니, 의학·심리학·명리학적 근거로 쓰지 마세요.'
+                : '본 테스트는 오락용일 뿐, 진단·면접·소개팅·이별·굿·사주·인생 판결문으로 쓰지 마세요. 웃어도 좋지만 너무 진지하게 받아들이진 마세요.'}
+            </p>
+          </div>
+
+          <details class="author-box">
+            <summary>💖 작가의 말</summary>
+            <div class="body">
+              <p>본 테스트는 비리비리 유저 蛆肉儿串儿(UID 417038183)이 처음 공개했으며, 술을 좋아하는 친구에게 금주를 권하기 위한 취지로 만들어졌습니다.</p>
+              <p>작가의 인격이 SHIT 염세자라서, 모두를 평등하게 공격해버렸습니다. 정말 죄송합니다!! 그래도 저는 절세 미녀라 분명 용서해주실 거예요.</p>
+              <p>오락성과 전문성의 균형을 잘 못 맞춰서 일부 인격 해석은 모호하거나 완전히 부정확할 수 있습니다(예: 찐따가 진짜 찐따가 아닐 수도). 기분 나쁘셨다면 정말 죄송합니다!!</p>
+              <p>한국어판 안내: 원본의 중국 인터넷 밈·브랜드는 한국 정서에 맞춰 일부 의역되었습니다.</p>
+            </div>
+          </details>
+
+          <div class="final-actions">
+            <button class="btn-restart" id="restartBtn">다시 하기</button>
+            <button class="btn-home" id="toTopBtn">홈으로 🌸</button>
+          </div>
+          <p class="footer-tip">🐾 결과가 마음에 들었다면 친구에게도 공유해보세요</p>
+        </div>
+      `;
+      // 이미지 로드 실패 폴백
+      const img = document.getElementById('finalImg');
+      if (img) {
+        img.onerror = () => {
+          img.outerHTML = '<div class="badge-emoji">🎀</div>';
         };
-        posterBox.classList.remove('no-image');
-      } else {
-        posterImage.removeAttribute('src');
-        posterImage.alt = '';
-        posterBox.classList.add('no-image');
       }
-
-      renderDimList(result);
-      showScreen('result');
+      document.getElementById('restartBtn').addEventListener('click', startQuiz);
+      document.getElementById('toTopBtn').addEventListener('click', () => showScreen('intro'));
     }
 
-    function startTest(preview = false) {
-      app.previewMode = preview;
-      app.answers = {};
-      const shuffledRegular = shuffle(questions);
-      const insertIndex = Math.floor(Math.random() * shuffledRegular.length) + 1;
-      app.shuffledQuestions = [
-        ...shuffledRegular.slice(0, insertIndex),
-        specialQuestions[0],
-        ...shuffledRegular.slice(insertIndex)
-      ];
-      renderQuestions();
-      showScreen('test');
+    function attachNext() {
+      const btn = document.getElementById('nextStepBtn');
+      if (btn) btn.addEventListener('click', () => {
+        if (state.resultStep < TOTAL_STEPS - 1) {
+          state.resultStep++;
+          renderResultStep();
+        }
+      });
     }
 
-    document.getElementById('startBtn').addEventListener('click', () => startTest(false));
-    document.getElementById('backIntroBtn').addEventListener('click', () => showScreen('intro'));
-    document.getElementById('submitBtn').addEventListener('click', renderResult);
-    document.getElementById('restartBtn').addEventListener('click', () => startTest(false));
-    document.getElementById('toTopBtn').addEventListener('click', () => showScreen('intro'));
+    // ─── 이벤트 바인딩 ───
+    document.getElementById('startBtn').addEventListener('click', startQuiz);
+    document.getElementById('backBtn').addEventListener('click', goBack);
   </script>
 </body>
 </html>
