@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SBTI 인격 테스트</title>
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js"></script>
   <style>
     :root {
       --color-primary: #E879A4;
@@ -673,6 +674,76 @@
     .author-box .body { border-top: 1px dashed var(--color-line); padding: 4px 20px 18px; }
     .author-box .body p { margin-top: 12px; font-size: 13px; line-height: 1.85; color: var(--color-text); }
 
+    .share-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+      position: relative;
+    }
+    .share-actions button {
+      padding: 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      position: relative;
+    }
+    .btn-save {
+      background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
+      color: #fff;
+      box-shadow: var(--shadow-btn);
+    }
+    .btn-save:hover { box-shadow: 0 6px 26px rgba(232,121,164,0.40); transform: translateY(-1px); }
+    .btn-share {
+      background: #fff;
+      color: var(--color-primary);
+      border: 2px solid #FFE4EE;
+    }
+    .btn-share:hover { border-color: var(--color-primary); background: #FFF9FC; }
+    .save-menu {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      right: 50%;
+      margin-right: 5px;
+      background: #fff;
+      border: 1px solid var(--color-line);
+      border-radius: 18px;
+      box-shadow: 0 12px 32px rgba(232,121,164,0.22);
+      overflow: hidden;
+      z-index: 10;
+      animation: fade-in .2s ease-out;
+    }
+    .save-menu button {
+      width: 100%;
+      padding: 14px 16px;
+      background: none;
+      color: var(--color-text);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .save-menu button:hover { background: #FFF5F9; }
+    .save-menu .divider { height: 1px; background: var(--color-line); }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(61, 44, 62, 0.92);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 9999;
+      animation: fade-in .25s ease-out;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+
     .final-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -695,6 +766,137 @@
       background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
       color: #fff;
       box-shadow: var(--shadow-btn);
+    }
+
+    /* ─── 캡처 전용 카드 (화면 밖에서 렌더링) ─── */
+    .capture-stage {
+      position: fixed;
+      top: 0;
+      left: -10000px;
+      pointer-events: none;
+    }
+    .capture-card {
+      width: 540px;
+      padding: 40px 36px 32px;
+      background: linear-gradient(135deg, #FFE4EE 0%, #F8E5FF 50%, #F3E0FF 100%);
+      border-radius: 36px;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color: var(--color-text);
+      position: relative;
+      overflow: hidden;
+    }
+    .capture-card::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 70%);
+    }
+    .capture-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(192,132,252,0.25), transparent 70%);
+    }
+    .capture-brand {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: var(--color-primary-dark);
+      text-align: center;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .capture-tagline {
+      font-size: 12px;
+      color: var(--color-text-light);
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .capture-poster {
+      background: rgba(255,255,255,0.55);
+      border-radius: 24px;
+      padding: 24px 18px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(8px);
+    }
+    .capture-emoji {
+      font-size: 56px;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .capture-code {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #E879A4 0%, #C084FC 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.05;
+    }
+    .capture-nick {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--color-primary-dark);
+      margin-top: 4px;
+    }
+    .capture-intro {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin-top: 12px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    .capture-models {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 22px;
+      position: relative;
+      z-index: 1;
+    }
+    .capture-model {
+      background: rgba(255,255,255,0.7);
+      border-radius: 14px;
+      padding: 12px 6px 10px;
+      text-align: center;
+    }
+    .capture-model .icon { font-size: 18px; line-height: 1; }
+    .capture-model .label { font-size: 10px; color: var(--color-text-light); margin-top: 4px; font-weight: 700; }
+    .capture-model .pct {
+      font-size: 14px;
+      font-weight: 900;
+      margin-top: 2px;
+      background: linear-gradient(135deg, #E879A4, #C084FC);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .capture-footer {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--color-text-light);
+      position: relative;
+      z-index: 1;
+      line-height: 1.6;
+    }
+    .capture-footer .url {
+      font-weight: 800;
+      color: var(--color-primary);
     }
 
     .footer-tip {
@@ -1789,6 +1991,18 @@
             <div class="intro">${escapeHtml(t.intro)}</div>
           </div>
 
+          <div class="share-actions">
+            <button class="btn-save" id="saveBtn">📥 카드 저장</button>
+            <button class="btn-share" id="shareBtn">📤 공유하기</button>
+            <div class="save-menu" id="saveMenu" style="display:none;">
+              <button id="copyImgBtn">📋 이미지 복사</button>
+              <div class="divider"></div>
+              <button id="downloadBtn">💾 이미지 저장</button>
+              <div class="divider"></div>
+              <button id="copyLinkBtn">🔗 링크 복사</button>
+            </div>
+          </div>
+
           <div class="final-card">
             <h3>💌 이 인격에 대하여</h3>
             <p class="desc">${escapeHtml(t.desc)}</p>
@@ -1834,16 +2048,162 @@
           </div>
           <p class="footer-tip">🌸 결과가 마음에 들었다면 친구한테도 공유해보세요</p>
         </div>
+
+        <!-- 캡처 전용 카드 (화면 밖) -->
+        <div class="capture-stage" aria-hidden="true">
+          <div class="capture-card" id="captureCard">
+            <div class="capture-brand">S B T I</div>
+            <div class="capture-tagline">MBTI는 이제 그만, SBTI 차례 ✨</div>
+            <div class="capture-poster">
+              <div class="capture-emoji">${imgSrc ? '' : '🎀'}</div>
+              <div class="capture-code">${t.code}</div>
+              <div class="capture-nick">${t.cn}</div>
+              <div class="capture-intro">${escapeHtml(t.intro)}</div>
+            </div>
+            <div class="capture-models">
+              ${r.modelScores.map(m => `
+                <div class="capture-model">
+                  <div class="icon">${m.emoji}</div>
+                  <div class="label">${m.key}</div>
+                  <div class="pct">${m.pct}%</div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="capture-footer">
+              지금 나의 SBTI 인격 알아보기 →<br/>
+              <span class="url">sbti-ko.vercel.app</span>
+            </div>
+          </div>
+        </div>
       `;
+
       // 이미지 로드 실패 폴백
       const img = document.getElementById('finalImg');
       if (img) {
-        img.onerror = () => {
-          img.outerHTML = '<div class="badge-emoji">🎀</div>';
-        };
+        img.onerror = () => { img.outerHTML = '<div class="badge-emoji">🎀</div>'; };
       }
+
       document.getElementById('restartBtn').addEventListener('click', startQuiz);
       document.getElementById('toTopBtn').addEventListener('click', () => showScreen('intro'));
+
+      // ─── 캡처/공유 ───
+      const saveBtn = document.getElementById('saveBtn');
+      const shareBtn = document.getElementById('shareBtn');
+      const saveMenu = document.getElementById('saveMenu');
+
+      saveBtn.addEventListener('click', () => {
+        saveMenu.style.display = saveMenu.style.display === 'none' ? 'block' : 'none';
+      });
+      // 메뉴 외부 클릭 닫기
+      document.addEventListener('click', (e) => {
+        if (!saveBtn.contains(e.target) && !saveMenu.contains(e.target)) {
+          saveMenu.style.display = 'none';
+        }
+      });
+
+      document.getElementById('copyImgBtn').addEventListener('click', () => copyImageToClipboard(t));
+      document.getElementById('downloadBtn').addEventListener('click', () => downloadCard(t));
+      document.getElementById('copyLinkBtn').addEventListener('click', copyLink);
+      shareBtn.addEventListener('click', () => shareCard(t));
+    }
+
+    // ─── 캡처 / 공유 로직 ───
+    async function captureCard() {
+      const node = document.getElementById('captureCard');
+      if (!node || typeof htmlToImage === 'undefined') return null;
+      if (document.fonts && document.fonts.ready) {
+        try { await document.fonts.ready; } catch {}
+      }
+      await new Promise(r => requestAnimationFrame(() => r()));
+      try {
+        return await htmlToImage.toBlob(node, {
+          pixelRatio: 2,
+          cacheBust: true,
+          backgroundColor: '#FFE4EE',
+        });
+      } catch (e) {
+        console.error('capture failed', e);
+        return null;
+      }
+    }
+
+    function showToast(msg) {
+      const old = document.querySelector('.toast');
+      if (old) old.remove();
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2200);
+    }
+
+    async function downloadCard(type) {
+      document.getElementById('saveMenu').style.display = 'none';
+      showToast('이미지 만드는 중...');
+      const blob = await captureCard();
+      if (!blob) { showToast('이미지 생성 실패 😢'); return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SBTI_${type.code}_${type.cn}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('저장 완료! 💾');
+    }
+
+    async function copyImageToClipboard(type) {
+      document.getElementById('saveMenu').style.display = 'none';
+      showToast('이미지 복사 중...');
+      const blob = await captureCard();
+      if (!blob) { showToast('이미지 생성 실패 😢'); return; }
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        showToast('클립보드에 복사됐어요! 📋');
+      } catch (e) {
+        showToast('복사 실패. 저장을 써보세요 😢');
+      }
+    }
+
+    async function copyLink() {
+      document.getElementById('saveMenu').style.display = 'none';
+      try {
+        await navigator.clipboard.writeText('https://sbti-ko.vercel.app');
+        showToast('링크 복사 완료! 🔗');
+      } catch {
+        showToast('복사 실패 😢');
+      }
+    }
+
+    async function shareCard(type) {
+      const text = `나의 SBTI 인격은 ${type.code}(${type.cn})! ${type.intro}`;
+      const url = 'https://sbti-ko.vercel.app';
+      // Web Share API (모바일)
+      if (navigator.share) {
+        try {
+          // 이미지 첨부 시도
+          const blob = await captureCard();
+          if (blob && navigator.canShare) {
+            const file = new File([blob], `SBTI_${type.code}.png`, { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({ title: 'SBTI 인격 테스트', text, url, files: [file] });
+              return;
+            }
+          }
+          await navigator.share({ title: 'SBTI 인격 테스트', text, url });
+        } catch (e) {
+          if (e.name !== 'AbortError') showToast('공유 취소됨');
+        }
+      } else {
+        // 데스크톱: 텍스트+링크 클립보드 복사
+        try {
+          await navigator.clipboard.writeText(`${text}\n${url}`);
+          showToast('공유 텍스트 복사 완료! 📤');
+        } catch {
+          showToast('공유 실패 😢');
+        }
+      }
     }
 
     function attachNext() {
